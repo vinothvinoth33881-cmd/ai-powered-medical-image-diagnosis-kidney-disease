@@ -1,0 +1,6 @@
+{
+  "name": "DriverGuard",
+  "description": "Real-time driver drowsiness and fatigue monitoring system with eye-state tracking, fatigue scoring, audio alert warnings, trip telemetry, and complete Python OpenCV/Keras project export.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
