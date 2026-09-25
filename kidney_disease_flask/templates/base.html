@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}NephroScan AI - Kidney Disease Diagnosis{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-med: #0284c7;
+            --primary-dark: #0369a1;
+            --accent-teal: #0d9488;
+            --bg-light: #f8fafc;
+            --card-border: #e2e8f0;
+        }
+        body {
+            background-color: var(--bg-light);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-med) !important;
+            letter-spacing: -0.5px;
+        }
+        .nav-link.active {
+            color: var(--primary-med) !important;
+            font-weight: 600;
+        }
+        .card-custom {
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            background: white;
+        }
+        .btn-medical {
+            background-color: var(--primary-med);
+            color: white;
+            border-radius: 8px;
+            font-weight: 600;
+            padding: 10px 20px;
+            border: none;
+            transition: all 0.2s;
+        }
+        .btn-medical:hover {
+            background-color: var(--primary-dark);
+            color: white;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+        }
+        .footer {
+            margin-top: auto;
+            border-top: 1px solid var(--card-border);
+            background: white;
+            padding: 16px 0;
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top py-2">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="{{ url_for('home') }}">
+                <i class="fa-solid fa-notes-medical text-primary fs-4"></i>
+                <span>NephroScan <span class="badge bg-primary-subtle text-primary border border-primary-subtle fw-semibold">AI</span></span>
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navMenu">
+                {% if session.get('user') %}
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('dashboard') }}"><i class="fa-solid fa-chart-line me-1"></i> Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('predict') }}"><i class="fa-solid fa-microscope me-1"></i> New Diagnosis</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('history') }}"><i class="fa-solid fa-clock-rotate-left me-1"></i> Patient History</a>
+                    </li>
+                </ul>
+
+                <div class="d-flex align-items-center gap-3">
+                    <div class="text-end d-none d-md-block">
+                        <div class="fw-semibold text-dark small">{{ session.get('user_name') }}</div>
+                        <div class="text-muted" style="font-size: 0.75rem;">{{ session.get('role', 'Physician') }}</div>
+                    </div>
+                    <a href="{{ url_for('logout') }}" class="btn btn-outline-danger btn-sm rounded-pill px-3">
+                        <i class="fa-solid fa-arrow-right-from-bracket me-1"></i> Logout
+                    </a>
+                </div>
+                {% else %}
+                <div class="ms-auto d-flex gap-2">
+                    <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-sm px-3">Sign In</a>
+                    <a href="{{ url_for('register') }}" class="btn btn-primary btn-sm px-3">Register</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <main class="py-4 flex-grow-1">
+        <div class="container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show card-custom border-0 shadow-sm" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer class="footer text-center">
+        <div class="container">
+            <p class="mb-0">NephroScan AI &copy; 2026. Clinical Diagnostic System for Renal CT/Ultrasound Evaluation. Models: SVM & Decision Tree.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

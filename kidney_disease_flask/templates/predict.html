@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Medical Scan - NephroScan AI{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-2">
+    <div class="col-lg-8">
+        <div class="card card-custom p-4 p-md-5">
+            <div class="mb-4">
+                <a href="{{ url_for('dashboard') }}" class="text-decoration-none small text-muted mb-2 d-inline-block">
+                    <i class="fa-solid fa-arrow-left me-1"></i> Back to Dashboard
+                </a>
+                <h3 class="fw-bold mb-1">New Renal Image Diagnosis</h3>
+                <p class="text-muted">Upload a Kidney CT or Ultrasound scan for automated classification into <strong>Cyst, Normal, Stone, or Tumor</strong>.</p>
+            </div>
+
+            <form method="POST" action="{{ url_for('predict') }}" enctype="multipart/form-data">
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small text-secondary">Patient Identifier / Name</label>
+                        <input type="text" name="patient_name" class="form-control" placeholder="e.g. John Doe / Patient #902" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small text-secondary">Select ML Diagnostic Model</label>
+                        <select name="model_choice" class="form-select">
+                            <option value="SVM" selected>Support Vector Machine (SVM - RBF)</option>
+                            <option value="DecisionTree">Decision Tree Classifier</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Dropzone / File Picker -->
+                <div class="mb-4">
+                    <label class="form-label fw-semibold small text-secondary">Kidney Scan Image (CT / Ultrasound)</label>
+                    <div class="border border-2 border-dashed rounded-3 p-4 text-center bg-light" id="drop-area">
+                        <i class="fa-solid fa-cloud-arrow-up text-primary fs-1 mb-2"></i>
+                        <h6 class="fw-bold mb-1">Drag and drop scan image here or click to browse</h6>
+                        <p class="text-muted small mb-3">Supported formats: PNG, JPG, JPEG, BMP, TIFF (Max 16MB)</p>
+                        
+                        <input type="file" name="file" id="file-input" class="d-none" accept=".png,.jpg,.jpeg,.bmp,.tiff" required>
+                        <button type="button" class="btn btn-outline-primary btn-sm px-4" onclick="document.getElementById('file-input').click();">
+                            Select File
+                        </button>
+                        <div id="file-name" class="mt-2 small text-success fw-semibold"></div>
+                    </div>
+                </div>
+
+                <!-- Image Preview -->
+                <div id="preview-container" class="mb-4 d-none text-center">
+                    <p class="small text-muted mb-2">Selected Scan Preview:</p>
+                    <img id="image-preview" src="#" alt="Preview" class="img-thumbnail rounded shadow-sm" style="max-height: 220px;">
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-medical py-2 fs-6 shadow-sm">
+                        <i class="fa-solid fa-wand-magic-sparkles me-2"></i> Analyze Scan & Generate Diagnosis
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const fileInput = document.getElementById('file-input');
+    const fileNameDisplay = document.getElementById('file-name');
+    const previewContainer = document.getElementById('preview-container');
+    const imagePreview = document.getElementById('image-preview');
+
+    fileInput.addEventListener('change', function(e) {
+        if (this.files && this.files[0]) {
+            const file = this.files[0];
+            fileNameDisplay.textContent = 'Selected: ' + file.name + ' (' + (file.size / 1024).toFixed(1) + ' KB)';
+            
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                imagePreview.src = event.target.result;
+                previewContainer.classList.remove('d-none');
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
+{% endblock %}

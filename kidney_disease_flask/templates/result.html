@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Diagnostic Findings - NephroScan AI{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-2">
+    <div class="col-lg-9">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <a href="{{ url_for('dashboard') }}" class="text-decoration-none small text-muted">
+                    <i class="fa-solid fa-arrow-left me-1"></i> Return to Dashboard
+                </a>
+                <h3 class="fw-bold mt-1 mb-0">Diagnostic Report</h3>
+            </div>
+            <a href="{{ url_for('predict') }}" class="btn btn-outline-primary btn-sm">
+                <i class="fa-solid fa-rotate-right me-1"></i> Scan Another Image
+            </a>
+        </div>
+
+        <div class="card card-custom p-4 p-md-5 mb-4">
+            <div class="row g-4 align-items-center">
+                <!-- Scan Image Display -->
+                <div class="col-md-5 text-center">
+                    <div class="p-2 border rounded-3 bg-light shadow-sm d-inline-block">
+                        <img src="{{ image_data_url }}" alt="Analyzed CT Scan" class="img-fluid rounded" style="max-height: 280px; object-fit: contain;">
+                    </div>
+                    <div class="small text-muted mt-2">
+                        <i class="fa-solid fa-circle-check text-success me-1"></i> Feature Matrix Extracted & Scaled
+                    </div>
+                </div>
+
+                <!-- Classification Findings -->
+                <div class="col-md-7">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span class="badge bg-light text-secondary border">CASE {{ record.id }}</span>
+                        <span class="badge bg-light text-secondary border">{{ record.date }}</span>
+                    </div>
+
+                    <h6 class="text-muted text-uppercase mb-1 small fw-bold">Classification Finding</h6>
+                    <div class="d-flex align-items-baseline gap-3 mb-3">
+                        <h2 class="display-6 fw-bold mb-0 text-{{ details.badge }}">
+                            {{ record.prediction }}
+                        </h2>
+                        <span class="badge bg-{{ details.badge }} fs-6 px-3 py-2">
+                            {{ record.confidence }} Confidence
+                        </span>
+                    </div>
+
+                    <div class="p-3 bg-light rounded-3 mb-3">
+                        <div class="fw-semibold text-dark small mb-1">Clinical Interpretation</div>
+                        <p class="text-secondary small mb-0">{{ details.description }}</p>
+                    </div>
+
+                    <div class="row g-2 small text-muted">
+                        <div class="col-6">
+                            <strong>Patient:</strong> {{ patient_name }}
+                        </div>
+                        <div class="col-6">
+                            <strong>Model:</strong> {{ model_used }}
+                        </div>
+                        <div class="col-12 mt-2">
+                            <strong>Recommended Action:</strong>
+                            <span class="text-dark fw-semibold">{{ details.urgency }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Next Step Actions -->
+        <div class="card card-custom p-3 bg-white border-0 shadow-sm">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <span class="small text-muted">Results are archived in this session's diagnosis registry.</span>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-secondary btn-sm" onclick="window.print()">
+                        <i class="fa-solid fa-print me-1"></i> Print Report
+                    </button>
+                    <a href="{{ url_for('history') }}" class="btn btn-medical btn-sm">
+                        <i class="fa-solid fa-list-check me-1"></i> View All Case Logs
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

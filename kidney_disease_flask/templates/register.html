@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Clinician Registration - NephroScan AI{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-4">
+    <div class="col-md-6 col-lg-5">
+        <div class="card card-custom p-4 p-md-5">
+            <div class="text-center mb-4">
+                <div class="d-inline-flex align-items-center justify-content-center bg-info-subtle text-info rounded-circle mb-3" style="width: 60px; height: 60px;">
+                    <i class="fa-solid fa-hospital-user fs-4"></i>
+                </div>
+                <h4 class="fw-bold mb-1">Create Diagnostic Account</h4>
+                <p class="text-muted small">Register as a nephrologist, radiologist, or clinician</p>
+            </div>
+
+            <form method="POST" action="{{ url_for('register') }}">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold small text-secondary">Full Name</label>
+                    <input type="text" name="name" class="form-control" placeholder="Dr. Alexander Wright" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold small text-secondary">Clinical Email</label>
+                    <input type="email" name="email" class="form-control" placeholder="alexander@clinic.org" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold small text-secondary">Role / Specialty</label>
+                    <select name="role" class="form-select">
+                        <option value="Consultant Nephrologist">Consultant Nephrologist</option>
+                        <option value="Radiologist">Radiologist</option>
+                        <option value="Urologist">Urologist</option>
+                        <option value="Clinical Fellow">Clinical Fellow</option>
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-semibold small text-secondary">Password</label>
+                    <input type="password" name="password" class="form-control" placeholder="Choose a password" required>
+                </div>
+
+                <button type="submit" class="btn btn-medical w-100 shadow-sm">
+                    <i class="fa-solid fa-user-plus me-2"></i> Register & Enter
+                </button>
+            </form>
+
+            <div class="text-center mt-3 pt-3 border-top">
+                <p class="small text-muted mb-0">Already registered? <a href="{{ url_for('login') }}" class="fw-semibold text-primary text-decoration-none">Sign In</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
